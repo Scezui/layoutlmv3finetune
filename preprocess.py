@@ -43,7 +43,7 @@ def prepare_examples(examples):
 
 def get_zip_dir_name():
     try:
-        os.chdir('/content/data')
+        os.chdir('/kaggle/input/ocr-proc')
 
         dir_list1 = os.listdir()
         dir_list = sorted(dir_list1)
