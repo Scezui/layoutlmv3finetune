@@ -15,18 +15,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-# Function to read data in smaller chunks using tqdm_notebook
-def read_text_file_chunks(file_path, chunk_size=1000):
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-        total_lines = len(lines)
-        for i in tqdm_notebook(range(0, total_lines, chunk_size), desc='Reading Data', leave=False):
-            yield lines[i:i + chunk_size]
-
-# Function to read data in smaller chunks and concatenate into a single list
 def read_text_file(file_path):
-    chunks = read_text_file_chunks(file_path)
-    return [line for chunk in chunks for line in chunk]
+    with open(file_path, 'r') as f:
+        return (f.readlines())
 
 
 def prepare_examples(examples):
@@ -43,7 +34,7 @@ def prepare_examples(examples):
 
 def get_zip_dir_name():
     try:
-        os.chdir('/kaggle/input/ocr-proc')
+        os.chdir('/kaggle/input/ocr-proc2')
 
         dir_list1 = os.listdir()
         dir_list = sorted(dir_list1)
@@ -87,12 +78,12 @@ if __name__ == '__main__':
     zip_dir_name = get_zip_dir_name()
     
     if zip_dir_name:
-        files['train_box'] = read_text_file('/content/data/243b138a-f48c-405a-a810-263c302f09cf_box.txt')
+        files['train_box'] = read_text_file('/kaggle/input/ocr-proc2/243b138a-f48c-405a-a810-263c302f09cf_box.txt')
 
         files['train_image'] = read_text_file(os.path.join(
-            os.curdir, 'data', f'{zip_dir_name}_image.txt'))
+            os.curdir, 'ocr-proc2', f'{zip_dir_name}_image.txt'))
         files['train'] = read_text_file(os.path.join(
-            os.curdir, 'data', f'{zip_dir_name}.txt'))
+            os.curdir, 'ocr-proc2', f'{zip_dir_name}.txt'))
     else:
         for f in os.listdir():
             if f.endswith('.txt') and f.find('box') != -1:
@@ -122,9 +113,9 @@ if __name__ == '__main__':
         bboxes.append([box.split('\t')[1].replace('\n', '')
                       for box in files['train_box'][rows[0]:rows[-1]+1]])
         if zip_dir_name:
-            image_path.append(f"/content/data/{zip_dir_name}/{image}.jpg")
+            image_path.append(f"/kaggle/input/ocr-proc2/{zip_dir_name}/{image}.jpg")
         else:
-            image_path.append(f"/content/data/{image}.jpg")
+            image_path.append(f"/kaggle/input/ocr-proc2/{image}.jpg")
 
     labels = list(set([tag for doc_tag in ner_tags for tag in doc_tag]))
     id2label = {v: k for v, k in enumerate(labels)}
